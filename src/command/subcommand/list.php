@@ -12,6 +12,7 @@ use pocketmine\command\CommandSender;
 use pocketmine\player\Player;
 use pocketmine\plugin\Plugin;
 use pocketmine\utils\TextFormat;
+use function count;
 use function str_replace;
 use function time;
 
@@ -32,7 +33,11 @@ class BountyListSubCommand extends BaseSubCommand{
 
 		$manager = $this->plugin->getDataManager();
 		$currentTime = time();
-		$message = $this->plugin->getConfig()->get("bounty-list", "from {player}, time: {bounty-time}, target: {target}");
+		$message = $this->plugin->getConfig()->get("bounty-list", "- from {player}, time: {bounty-time}, target: {target}");
+		if(count($manager->getTargets()) === 0){
+			$sender->sendMessage(TextFormat::GREEN . "There are no Players on Bounty!");
+			return;
+		}
 		$sender->sendMessage("§r§a>>§6List of Players on Bounty§a<<");
 		foreach($manager->getTargets() as $xuid => $data){
 			$sender->sendMessage(str_replace(["{player}", "{bounty-time}", "{target}"], [$data[BountyDataManager::TAG_OWNER], Utils::timeFormat($data[BountyDataManager::TAG_TIME] - $currentTime, $this->plugin->getConfig()->get("time-format", "{year}{month}{day}{hour}{minute}{second}")), $data[BountyDataManager::TAG_TARGET]], $message));

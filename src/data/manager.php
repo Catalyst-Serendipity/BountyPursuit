@@ -12,10 +12,10 @@ use function time;
 
 class BountyDataManager{
 
-	public const DATA_DEATH = "death";
 	public const DATA_KILL = "kill";
 	public const DATA_CURRENT_STREAK = "streak";
 	public const DATA_HIGHEST_STREAK = "highest-streak";
+	public const DATA_NAME = "name";
 
 	public const TAG_OWNER = "owner";
 	public const TAG_TARGET = "target";
@@ -48,7 +48,7 @@ class BountyDataManager{
 		$xuid = (int) $player->getXuid();
 		if(!isset($this->data[$xuid])){
 			$this->data[$xuid] = [
-				self::DATA_DEATH => false,
+				self::DATA_NAME => $player->getName(),
 				self::DATA_CURRENT_STREAK => 0,
 				self::DATA_HIGHEST_STREAK => 0,
 				self::DATA_KILL => 0
@@ -62,12 +62,16 @@ class BountyDataManager{
 		$xuid = (int) $player->getXuid();
 		if(isset($this->data[$xuid])){
 			foreach($data as $key => $value){
-				if(!in_array($key, [self::DATA_CURRENT_STREAK, self::DATA_DEATH, self::DATA_HIGHEST_STREAK, self::DATA_KILL], true)){
+				if(!in_array($key, [self::DATA_CURRENT_STREAK, self::DATA_HIGHEST_STREAK, self::DATA_KILL], true)){
 					throw new \InvalidArgumentException("Unknown data type: " . $key);
 				}
 				$this->action($xuid, $key, $value, $action);
 			}
 		}
+	}
+
+	public function get(Player $player, string $key) : mixed{
+		return $this->data[(int) $player->getXuid()][$key] ?? [];
 	}
 
 	private function action(int $xuid, string $key, mixed $value, int $action) : void{
@@ -99,10 +103,28 @@ class BountyDataManager{
 		return $this->targets[(int) $player->getXuid()] ?? [];
 	}
 
+	public function getTargetTo(Player $victim) : array{
+		$result = [];
+		foreach($this->targets as $xuid => $data){
+			if($data[self::TAG_TARGET] === $victim->getName()){
+				$result = $data;
+				$result["xuid"] = $xuid;
+				break;
+			}
+		}
+		return $result;
+	}
+
 	public function setTarget(Player $player, Player $target, int $seconds) : void{
 		$this->targets[(int) $player->getXuid()][self::TAG_OWNER] = $player->getName();
 		$this->targets[(int) $player->getXuid()][self::TAG_TARGET] = $target->getName();
 		$this->targets[(int) $player->getXuid()][self::TAG_TIME] = time() + $seconds;
+	}
+
+	public function removeTarget(int $xuid) : void{
+		if(isset($this->targets[$xuid])){
+			unset($this->targets[$xuid]);
+		}
 	}
 
 	public function saveData() : void{

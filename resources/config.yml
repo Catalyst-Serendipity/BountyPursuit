@@ -5,3 +5,7 @@ bounty-list: "from {player}, time: {bounty-time}, target: {target}"
 time-format: "{year}{month}{day}{hour}{minute}{second}"
 # Bounty Set Target message
 bounty-set: "§r§aBounty Set To {target} for {bounty-time}"
+# Bounty TopNPC Format
+bounty-top-kill: "#{rank-kill} {player} Bounty Kills: {kill-total}"
+bounty-top-highest-streak: "#{rank-highest-streak} {player} Bounty Highest Streaks: {highest-streak-total}"
+bounty-top-streak: "#{rank-streak} {player} Bounty Current Streaks: {streak-total}"

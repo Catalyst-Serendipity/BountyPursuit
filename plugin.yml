@@ -8,6 +8,8 @@ permissions:
     default: true
   bountypursuit.command.list:
     default: true
+  bountypursuit.command.remove:
+    default: op
   bountypursuit.command.reward:
     default: true
   bountypursuit.command.target:

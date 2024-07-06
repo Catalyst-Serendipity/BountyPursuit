@@ -4,16 +4,26 @@ declare(strict_types=1);
 
 namespace nicholass003\bounty\utils;
 
+use nicholass003\bounty\entity\BountyNPC;
+use pocketmine\entity\Human;
+use pocketmine\entity\Location;
+use pocketmine\entity\Skin;
 use pocketmine\inventory\Inventory;
 use pocketmine\item\Item;
+use pocketmine\math\Vector3;
 use pocketmine\nbt\BigEndianNbtSerializer;
 use pocketmine\nbt\NBT;
 use pocketmine\nbt\tag\CompoundTag;
 use pocketmine\nbt\tag\ListTag;
 use pocketmine\nbt\TreeRoot;
+use pocketmine\Server;
+use pocketmine\utils\Config;
+use function abs;
 use function array_keys;
 use function array_values;
+use function base64_decode;
 use function floor;
+use function number_format;
 use function str_replace;
 use function trim;
 use function uasort;
@@ -30,6 +40,56 @@ class Utils{
 			return $b[$type] <=> $a[$type];
 		});
 		return $data;
+	}
+
+	public static function getTopPlayerData(array $data, string $type, int $top) : array{
+		$result = [];
+		$num = 1;
+		foreach(self::getSortedArrayBoard($data, $type) as $xuid => $userData){
+			if($num === $top){
+				$result = $userData;
+				$result["rank"] = $top;
+				break;
+			}
+			++$num;
+		}
+		return $result;
+	}
+
+	public static function getTopStatsPlayerSkin(array $data, string $type, int $top) : ?Skin{
+		$playerName = "";
+		$num = 1;
+		foreach(self::getSortedArrayBoard($data, $type) as $xuid => $userData){
+			if($num === $top){
+				$playerName = $userData["name"];
+				break;
+			}
+			++$num;
+		}
+
+		$player = Server::getInstance()->getPlayerByPrefix($playerName);
+		if($player !== null){
+			return Human::parseSkinNBT($player->getSaveData());
+		}else{
+			$playerData = Server::getInstance()->getOfflinePlayerData($playerName);
+			return $playerData !== null ? Human::parseSkinNBT($playerData) : null;
+		}
+	}
+	public static function formatNumber(int $number, int $precision = 3) : string {
+		$divisors = [
+			1000 ** 0 => "", // One
+			1000 ** 1 => "K", // Thousand
+			1000 ** 2 => "M", // Million
+			1000 ** 3 => "B", // Billion
+			1000 ** 4 => "T", // Trillion
+		];
+
+		foreach($divisors as $divisor => $shorthand){
+			if(abs($number) < ($divisor * 1000)){
+				break;
+			}
+		}
+		return (float) number_format($number / $divisor, $precision) . $shorthand;
 	}
 
 	public static function readContents(string $data) : array{
@@ -69,5 +129,22 @@ class Utils{
 			'{second}' => $seconds > 0 ? $seconds . 's' : ''
 		];
 		return trim(str_replace(array_keys($replacements), array_values($replacements), $format));
+	}
+
+	public static function loadNPCs(Config $dataNPC) : void{
+		foreach(Server::getInstance()->getWorldManager()->getWorlds() as $world){
+			foreach($dataNPC->getAll() as $index => $data){
+				if($world->getFolderName() === $data["world"]){
+					$pos = $data["pos"];
+					$skin = $data["skin"];
+					$npc = new BountyNPC(Location::fromObject(new Vector3((int) $pos["x"], (int) $pos["y"], (int) $pos["z"]), $world),
+							new Skin(base64_decode($skin["skinId"], true), base64_decode($skin["skinData"], true), base64_decode($skin["capeData"], true), base64_decode($skin["geometryName"], true), base64_decode($skin["geometryData"], true)),
+							$data["top"],
+							$data["type"]
+					);
+					$npc->spawnToAll();
+				}
+			}
+		}
 	}
 }
