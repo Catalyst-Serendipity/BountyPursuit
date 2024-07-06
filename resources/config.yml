@@ -1,0 +1,7 @@
+# BountyPursuit Configuration #
+bounty-list: "from {player}, time: {bounty-time}, target: {target}"
+# Time Format:
+# year, month, day, hour, minute, second
+time-format: "{year}{month}{day}{hour}{minute}{second}"
+# Bounty Set Target message
+bounty-set: "§r§aBounty Set To {target} for {bounty-time}"

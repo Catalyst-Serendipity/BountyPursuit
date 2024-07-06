@@ -1,0 +1,16 @@
+name: BountyPursuit
+api: 5.3.0
+version: 0.1.0
+main: nicholass003\bounty\BountyPursuit
+author: nicholass003
+permissions:
+  bountypursuit.command:
+    default: true
+  bountypursuit.command.list:
+    default: true
+  bountypursuit.command.reward:
+    default: true
+  bountypursuit.command.target:
+    default: true
+  bountypursuit.command.top:
+    default: op
