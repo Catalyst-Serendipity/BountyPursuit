@@ -10,15 +10,15 @@ use pocketmine\event\player\PlayerJoinEvent;
 
 class EventListener implements Listener{
 
-    private BountyDataManager $manager;
+	private BountyDataManager $manager;
 
-    public function __construct(
-        protected BountyPursuit $plugin
-    ){
-        $this->manager = $this->plugin->getDataManager();
-    }
+	public function __construct(
+		protected BountyPursuit $plugin
+	){
+		$this->manager = $this->plugin->getDataManager();
+	}
 
-    public function onPlayerJoin(PlayerJoinEvent $event) : void{
-        $this->manager->create($event->getPlayer());
-    }
+	public function onPlayerJoin(PlayerJoinEvent $event) : void{
+		$this->manager->create($event->getPlayer());
+	}
 }

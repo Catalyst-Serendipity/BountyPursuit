@@ -23,30 +23,30 @@ use pocketmine\world\World;
 class BountyPursuit extends PluginBase{
 	use SingletonTrait;
 
-    private BountySetupGUI $bountySetup;
+	private BountySetupGUI $bountySetup;
 	private BountyDataManager $dataManager;
 
 	protected function onEnable() : void{
 		self::setInstance($this);
 
-        if(!InvMenuHandler::isRegistered()){
-            InvMenuHandler::register($this);
-        }
+		if(!InvMenuHandler::isRegistered()){
+			InvMenuHandler::register($this);
+		}
 
-        $this->bountySetup = new BountySetupGUI($this);
+		$this->bountySetup = new BountySetupGUI($this);
 
 		$this->dataManager = new BountyDataManager($this);
 		$this->dataManager->loadData();
 
 		$this->getServer()->getPluginManager()->registerEvents(new EventListener($this), $this);
 
-        $this->registerCommands($this->getServer()->getCommandMap());
+		$this->registerCommands($this->getServer()->getCommandMap());
 		$this->registerEntities();
 	}
 
-    private function registerCommands(SimpleCommandMap $commandMap) : void{
-        $commandMap->register("bountypursuit", new BountyCommand($this, "bounty", "Bounty Command"));
-    }
+	private function registerCommands(SimpleCommandMap $commandMap) : void{
+		$commandMap->register("bountypursuit", new BountyCommand($this, "bounty", "Bounty Command"));
+	}
 
 	private function registerEntities() : void{
 		$entityFactory = EntityFactory::getInstance();
@@ -65,7 +65,7 @@ class BountyPursuit extends PluginBase{
 		return $this->dataManager;
 	}
 
-    public function getBountySetup() : BountySetupGUI{
-        return $this->bountySetup;
-    }
+	public function getBountySetup() : BountySetupGUI{
+		return $this->bountySetup;
+	}
 }

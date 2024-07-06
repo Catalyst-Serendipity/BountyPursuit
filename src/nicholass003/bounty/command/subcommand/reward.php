@@ -16,17 +16,17 @@ class BountyRewardSubCommand extends BaseSubCommand{
 	/** @var BountyPursuit */
 	protected Plugin $plugin;
 
-    protected function prepare() : void{
-        $this->setPermission("bountypursuit.command.reward");
-    }
+	protected function prepare() : void{
+		$this->setPermission("bountypursuit.command.reward");
+	}
 
-    public function onRun(CommandSender $sender, string $aliasUsed, array $args) : void{
+	public function onRun(CommandSender $sender, string $aliasUsed, array $args) : void{
 		if(!$sender instanceof Player){
 			$sender->sendMessage(TextFormat::RED . "You must be logged in to use this command.");
 			return;
 		}
 
-        $setup = $this->plugin->getBountySetup();
-        $setup->send($sender);
-    }
+		$setup = $this->plugin->getBountySetup();
+		$setup->send($sender);
+	}
 }
