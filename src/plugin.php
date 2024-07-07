@@ -17,6 +17,7 @@ use pocketmine\entity\EntityFactory;
 use pocketmine\entity\Human;
 use pocketmine\nbt\tag\CompoundTag;
 use pocketmine\nbt\tag\IntTag;
+use pocketmine\nbt\tag\StringTag;
 use pocketmine\plugin\PluginBase;
 use pocketmine\utils\Config;
 use pocketmine\utils\SingletonTrait;
@@ -79,9 +80,10 @@ class BountyPursuit extends PluginBase{
 					throw new SavedDataLoadingException("Expected \"{$tagName}\" NBT tag of type {$tagClass} not found");
 				}
 			};
+			$customId = $getTagValue($nbt, BountyNPC::TAG_CUSTOM_ID, StringTag::class);
 			$top = $getTagValue($nbt, BountyNPC::TAG_TOP, IntTag::class);
-			$type = $getTagValue($nbt, BountyNPC::TAG_TYPE, IntTag::class);
-			return new BountyNPC(EntityDataHelper::parseLocation($nbt, $world), Human::parseSkinNBT($nbt), $top, $type, $nbt);
+			$type = $getTagValue($nbt, BountyNPC::TAG_TYPE, StringTag::class);
+			return new BountyNPC(EntityDataHelper::parseLocation($nbt, $world), Human::parseSkinNBT($nbt), $customId, $top, $type, $nbt);
 		}, ["BountyNPC"]);
 	}
 

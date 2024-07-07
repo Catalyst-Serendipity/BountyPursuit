@@ -16,15 +16,19 @@ use pocketmine\nbt\tag\IntTag;
 use pocketmine\nbt\tag\StringTag;
 use pocketmine\scheduler\Task;
 use pocketmine\world\particle\CriticalParticle;
-use function base64_encode;
+use function array_key_exists;
 use function mt_rand;
 use function str_replace;
 
 class BountyNPC extends Human{
 
+	public const TAG_CUSTOM_ID = "CustomID";
 	public const TAG_TOP = "Top";
 	public const TAG_TYPE = "Type";
 
+	public const TAG_SKIN_DATA = "SkinDataNBT";
+
+	protected string $customId;
 	protected int $top;
 	protected string $type;
 
@@ -33,20 +37,26 @@ class BountyNPC extends Human{
 	public function __construct(
 		Location $location,
 		Skin $skin,
+		string $customId,
 		int $top,
 		string $type,
 		?CompoundTag $nbt = null
 	){
 		parent::__construct($location, $skin, $nbt);
+		$this->customId = $customId;
 		$this->top = $top;
 		$this->type = $type;
 		$this->setupTopEffects($top);
-		$this->updateNameTag();
+		$this->update();
 		$this->setCanSaveWithChunk(false);
 	}
 
 	protected function initEntity(CompoundTag $nbt) : void{
 		parent::initEntity($nbt);
+		$tagId = $nbt->getTag(self::TAG_TYPE);
+		if($tagId instanceof StringTag){
+			$this->type = $tagId->getValue();
+		}
 		$tagTop = $nbt->getTag(self::TAG_TOP);
 		if($tagTop instanceof IntTag){
 			$this->top = $tagTop->getValue();
@@ -61,6 +71,7 @@ class BountyNPC extends Human{
 
 	public function saveNBT() : CompoundTag{
 		$nbt = parent::saveNBT();
+		$nbt->setString(self::TAG_CUSTOM_ID, $this->customId);
 		$nbt->setInt(self::TAG_TOP, $this->top);
 		$nbt->setString(self::TAG_TYPE, $this->type);
 		return $nbt;
@@ -69,14 +80,18 @@ class BountyNPC extends Human{
 	protected function entityBaseTick(int $tickDiff = 1) : bool{
 		++$this->tick;
 		if($this->tick >= 20 * 10){
-			$this->updateNameTag();
+			$this->update();
 			$this->tick = 0;
 		}
 		return parent::entityBaseTick($tickDiff);
 	}
 
-	private function updateNameTag() : void {
+	private function update() : void {
 		$data = Utils::getTopPlayerData(BountyPursuit::getInstance()->getDataManager()->getBounties(), $this->type, $this->top);
+		$skin = Utils::getTopStatsPlayerSkin(BountyPursuit::getInstance()->getDataManager()->getBounties(), $this->type, $this->top);
+		if($skin !== null){
+			$this->setSkin($skin);
+		}
 		$this->setNameTag(str_replace(["{player}", "{rank-" . $this->type . "}", "{" . $this->type . "-total}"], [$data[BountyDataManager::DATA_NAME], $data["rank"], $data[$this->type]], BountyPursuit::getInstance()->getConfig()->get("bounty-top-" . $this->type)));
 	}
 
@@ -105,17 +120,11 @@ class BountyNPC extends Human{
 
 	public function saveData() : void{
 		$config = BountyPursuit::getInstance()->getDataNPC();
-		$data = $config->getAll();
-		$data[] = [
+		$data = [
+			"customId" => $this->customId,
 			"top" => $this->top,
 			"type" => $this->type,
-			"skin" => [
-				"skinId" => base64_encode($this->getSkin()->getSkinId()),
-				"skinData" => base64_encode($this->getSkin()->getSkinData()),
-				"capeData" => base64_encode($this->getSkin()->getCapeData()),
-				"geometryName" => base64_encode($this->getSkin()->getGeometryName()),
-				"geometryData" => base64_encode($this->getSkin()->getGeometryData()),
-			],
+			"skin" => Utils::writeSkinData($this->skin),
 			"world" => $this->getWorld()->getFolderName(),
 			"pos" => [
 				"x" => $this->getPosition()->getFloorX(),
@@ -123,7 +132,9 @@ class BountyNPC extends Human{
 				"z" => $this->getPosition()->getFloorZ(),
 			]
 		];
-		$config->setAll($data);
-		$config->save();
+		if(!array_key_exists($this->customId, $data)){
+			$config->set($this->customId, $data);
+			$config->save();
+		}
 	}
 }

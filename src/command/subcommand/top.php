@@ -59,7 +59,7 @@ class BountyTopSubCommand extends BaseSubCommand{
 		if($skin === null){
 			$skin = $sender->getSkin();
 		}
-		$npc = new BountyNPC($sender->getLocation(), $skin, $top, $args["type"]);
+		$npc = new BountyNPC($sender->getLocation(), $skin, Utils::createCustomId(), $top, $args["type"]);
 		$npc->spawnToAll();
 	}
 }

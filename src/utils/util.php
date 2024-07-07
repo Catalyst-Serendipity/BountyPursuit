@@ -22,8 +22,11 @@ use function abs;
 use function array_keys;
 use function array_values;
 use function base64_decode;
+use function base64_encode;
+use function bin2hex;
 use function floor;
 use function number_format;
+use function random_bytes;
 use function str_replace;
 use function trim;
 use function uasort;
@@ -138,7 +141,8 @@ class Utils{
 					$pos = $data["pos"];
 					$skin = $data["skin"];
 					$npc = new BountyNPC(Location::fromObject(new Vector3((int) $pos["x"], (int) $pos["y"], (int) $pos["z"]), $world),
-							new Skin(base64_decode($skin["skinId"], true), base64_decode($skin["skinData"], true), base64_decode($skin["capeData"], true), base64_decode($skin["geometryName"], true), base64_decode($skin["geometryData"], true)),
+							self::readSkinData($skin),
+							$data["customId"],
 							$data["top"],
 							$data["type"]
 					);
@@ -146,5 +150,25 @@ class Utils{
 				}
 			}
 		}
+	}
+
+	public static function createCustomId() : string{
+		return bin2hex(random_bytes(8));
+	}
+
+	public static function writeSkinData(Skin $skin) : string{
+		$nbt = CompoundTag::create()
+		->setString("SkinId", $skin->getSkinId())
+		->setByteArray("SkinData", $skin->getSkinData())
+		->setByteArray("CapeData", $skin->getCapeData())
+		->setString("GeometryName", $skin->getGeometryName())
+		->setByteArray("GeometryData", $skin->getGeometryData());
+		return base64_encode(zlib_encode((new BigEndianNbtSerializer())->write(new TreeRoot($nbt, BountyNPC::TAG_SKIN_DATA)), ZLIB_ENCODING_GZIP));
+	}
+
+	public static function readSkinData(string $data) : ?Skin{
+		$tag = (new BigEndianNbtSerializer())->read(zlib_decode(base64_decode($data, true)))->getTag(BountyNPC::TAG_SKIN_DATA);
+		/** @var CompountTag $tag */
+		return new Skin($tag->getString("SkinId"), $tag->getByteArray("SkinData"), $tag->getByteArray("CapeData"), $tag->getString("GeometryName"), $tag->getByteArray("GeometryData"));
 	}
 }
