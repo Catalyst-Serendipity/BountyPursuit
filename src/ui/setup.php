@@ -10,7 +10,6 @@ use nicholass003\bounty\utils\Utils;
 use pocketmine\inventory\Inventory;
 use pocketmine\player\Player;
 use pocketmine\utils\Config;
-use function base64_decode;
 use function base64_encode;
 
 class BountySetupGUI{
@@ -29,7 +28,7 @@ class BountySetupGUI{
 		$menu->setName("§r§8Bounty Rewards Setup");
 		$inv = $menu->getInventory();
 		if($encoded !== false){
-			$inv->setContents(Utils::readContents(base64_decode($encoded, true)));
+			$inv->setContents(Utils::readContents($encoded));
 		}
 		$menu->setInventoryCloseListener(function(Player $player, Inventory $inventory) : void{
 			if(!empty($inventory->getContents())){

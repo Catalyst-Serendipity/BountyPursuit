@@ -97,7 +97,7 @@ class Utils{
 
 	public static function readContents(string $data) : array{
 		$contents = [];
-		$invTag = (new BigEndianNbtSerializer())->read(zlib_decode($data))->mustGetCompoundTag()->getListTag(self::TAG_INVENTORY);
+		$invTag = (new BigEndianNbtSerializer())->read(zlib_decode(base64_decode($data, true)))->mustGetCompoundTag()->getListTag(self::TAG_INVENTORY);
 		/** @var CompoundTag $tag */
 		foreach($invTag as $tag){
 			$contents[$tag->getByte("Slot")] = Item::nbtDeserialize($tag);
