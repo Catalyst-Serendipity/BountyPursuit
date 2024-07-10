@@ -62,6 +62,7 @@ class BountyTargetSubCommand extends BaseSubCommand{
 				foreach($manager->getTargets() as $xuid => $data){
 					if($currentTime >= $data[BountyDataManager::TAG_TIME]){
 						$manager->removeTarget($xuid);
+						BountyPursuit::getInstance()->getBountySetup()->removeReward((string) $xuid);
 					}
 				}
 			}

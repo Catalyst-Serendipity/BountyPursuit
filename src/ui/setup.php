@@ -41,6 +41,13 @@ class BountySetupGUI{
 		$menu->send($player);
 	}
 
+	public function removeReward(string $xuid) : void{
+		if($this->rewards->exists($xuid)){
+			$this->rewards->remove($xuid);
+			$this->rewards->save();
+		}
+	}
+
 	public function getRewards(string $xuid) : array{
 		$contents = [];
 		$encoded = $this->rewards->get($xuid);

@@ -80,6 +80,8 @@ class EventListener implements Listener{
 					if($currentStreak > $this->manager->get($damager, BountyDataManager::DATA_HIGHEST_STREAK)){
 						$this->manager->update($damager, [BountyDataManager::DATA_HIGHEST_STREAK => $currentStreak], BountyDataAction::NONE);
 					}
+					$this->manager->removeTarget((int) $bounties["xuid"]);
+					$this->plugin->getBountySetup()->removeReward((string) $bounties["xuid"]);
 				}
 			}
 		}
