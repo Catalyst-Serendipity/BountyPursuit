@@ -89,8 +89,10 @@ class EventListener implements Listener{
 		$itemEntity = $event->getOrigin();
 		$player = $event->getEntity();
 		if($itemEntity instanceof ItemEntity && $player instanceof Player){
-			if($itemEntity->getOwner() !== $player->getName()){
-				$event->cancel();
+			if($itemEntity->getOwningEntity() instanceof Player){
+				if($itemEntity->getOwner() !== $player->getName()){
+					$event->cancel();
+				}
 			}
 		}
 	}
