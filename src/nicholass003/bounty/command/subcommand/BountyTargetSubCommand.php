@@ -9,29 +9,13 @@
  * | | | | | (__| | | | (_) | | (_| \__ \__ \ |_| | |_| |__) |
  * |_| |_|_|\___|_| |_|\___/|_|\__,_|___/___/\___/ \___/____/
  *
- * The use of this software is granted only to individuals or organizations who have obtained
- * a valid license from the copyright owner. The license is non-transferable and is limited to
- * personal, non-commercial use.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- * Any form of distribution, reproduction, or use for commercial purposes, whether directly or
- * indirectly, is strictly prohibited without the express written consent of the copyright owner.
- *
- * Modification, decompilation, or reverse engineering of the software is not permitted.
- *
- * By using the software, you agree to abide by the terms of this license.
- *
- * The software is provided "as is," without warranty of any kind, express or implied,
- * including but not limited to the warranties of merchantability, fitness for a particular
- * purpose, and noninfringement. In no event shall the authors or copyright holders be
- * liable for any claim, damages, or other liability, whether in an action of contract,
- * tort, or otherwise, arising from, out of, or in connection with the software or the use
- * or other dealings in the software.
- *
- * For inquiries regarding licensing options, please contact the copyright owner.
- *
- * @author nicholass033
- *
- * Developed by: Catalyst Serendipity
+ * @author  nicholass003
+ * @link    https://github.com/nicholass003/
  *
  *
  */
@@ -40,9 +24,9 @@ declare(strict_types=1);
 
 namespace nicholass003\bounty\command\subcommand;
 
-use nicholass003\bounty\libs\_dd564a5d1203e383\CortexPE\Commando\args\IntegerArgument;
-use nicholass003\bounty\libs\_dd564a5d1203e383\CortexPE\Commando\args\RawStringArgument;
-use nicholass003\bounty\libs\_dd564a5d1203e383\CortexPE\Commando\BaseSubCommand;
+use nicholass003\bounty\libs\_47370087076c43d9\CortexPE\Commando\args\IntegerArgument;
+use nicholass003\bounty\libs\_47370087076c43d9\CortexPE\Commando\args\RawStringArgument;
+use nicholass003\bounty\libs\_47370087076c43d9\CortexPE\Commando\BaseSubCommand;
 use nicholass003\bounty\BountyPursuit;
 use nicholass003\bounty\data\BountyDataManager;
 use nicholass003\bounty\utils\Utils;
