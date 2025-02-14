@@ -24,7 +24,7 @@ declare(strict_types=1);
 
 namespace nicholass003\bounty\command;
 
-use nicholass003\bounty\libs\_1c81b0a033abf4de\CortexPE\Commando\BaseCommand;
+use nicholass003\bounty\libs\_6de1267ac5dfd132\CortexPE\Commando\BaseCommand;
 use nicholass003\bounty\BountyPursuit;
 use nicholass003\bounty\command\subcommand\BountyListSubCommand;
 use nicholass003\bounty\command\subcommand\BountyRemoveSubCommand;

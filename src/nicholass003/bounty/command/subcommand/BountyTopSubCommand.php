@@ -24,9 +24,9 @@ declare(strict_types=1);
 
 namespace nicholass003\bounty\command\subcommand;
 
-use nicholass003\bounty\libs\_1c81b0a033abf4de\CortexPE\Commando\args\IntegerArgument;
-use nicholass003\bounty\libs\_1c81b0a033abf4de\CortexPE\Commando\args\RawStringArgument;
-use nicholass003\bounty\libs\_1c81b0a033abf4de\CortexPE\Commando\BaseSubCommand;
+use nicholass003\bounty\libs\_6de1267ac5dfd132\CortexPE\Commando\args\IntegerArgument;
+use nicholass003\bounty\libs\_6de1267ac5dfd132\CortexPE\Commando\args\RawStringArgument;
+use nicholass003\bounty\libs\_6de1267ac5dfd132\CortexPE\Commando\BaseSubCommand;
 use nicholass003\bounty\BountyPursuit;
 use nicholass003\bounty\data\BountyDataManager;
 use nicholass003\bounty\entity\BountyNPC;
