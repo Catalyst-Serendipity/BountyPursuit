@@ -24,7 +24,7 @@ declare(strict_types=1);
 
 namespace nicholass003\bounty\ui;
 
-use nicholass003\bounty\libs\_47370087076c43d9\muqsit\invmenu\InvMenu;
+use nicholass003\bounty\libs\_1c81b0a033abf4de\muqsit\invmenu\InvMenu;
 use nicholass003\bounty\BountyPursuit;
 use nicholass003\bounty\utils\Utils;
 use pocketmine\inventory\Inventory;
